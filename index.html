@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white p-0 m-0">
+  <h2 class="text-2xl text-center mt-5 font-bold">Movie Explorer</h2>
+  <div class="text-center my-4">
+    <input id="search" type="text" placeholder="Search for a movie" style="width:300px; padding:10px; color:black;">
+  </div>
+
+  <div id="movies" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 px-5"></div>
+
+  <div class="text-center my-6 space-x-4">
+    <button onclick="location.reload()" class="bg-orange-500 px-4 py-2 rounded">Previous</button>
+    <button onclick="location.reload()" class="bg-orange-500 px-4 py-2 rounded">Next</button>
+  </div>
+
+  <script>
+    let allMovies = []
+
+    async function loadMovies() {
+      const res = await fetch('https://jsonfakery.com/movies/paginated?limit=9&page=1');
+      const data = await res.json();
+      allMovies = data.data;
+      showMovies(allMovies);
+    }
+
+    function showMovies(movies) {
+      const box = document.getElementById("movies");
+      box.innerHTML = "";
+      movies.forEach(m => {
+        box.innerHTML += `
+          <div class="bg-zinc-800 p-4 rounded">
+            <img src="${m.poster_path}" class="w-full h-64 object-cover mb-3 rounded">
+            <p class="text-lg font-bold">${m.original_title}</p>
+            <p class="text-sm mb-2">${m.overview}</p>
+            <p class="text-yellow-400">⭐ ${m.vote_average || "N/A"}</p>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById("search").oninput = function() {
+      const val = this.value.toLowerCase();
+      const filtered = allMovies.filter(m => m.original_title.toLowerCase().includes(val));
+      showMovies(filtered);
+    }
+
+    loadMovies();
+  </script>
+</body>
+</html>
