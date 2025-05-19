@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movie Explorer</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -14,11 +15,11 @@
   <div id="movies" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 px-5"></div>
 
   <div class="text-center my-6 space-x-4">
-    <button onclick="location.reload()" class="bg-orange-500 px-4 py-2 rounded">Previous</button>
-    <button onclick="location.reload()" class="bg-orange-500 px-4 py-2 rounded">Next</button>
+    <button onclick="location.reload()" class="bg-red-600 px-4 py-2 rounded">Previous</button>
+    <button onclick="location.reload()" class="bg-green-500 px-4 py-2 rounded">Next</button>
   </div>
 
-  <script>
+<script>
     let allMovies = []
 
     async function loadMovies() {
@@ -37,19 +38,27 @@
             <img src="${m.poster_path}" class="w-full h-64 object-cover mb-3 rounded">
             <p class="text-lg font-bold">${m.original_title}</p>
             <p class="text-sm mb-2">${m.overview}</p>
-            <p class="text-yellow-400">⭐ ${m.vote_average || "N/A"}</p>
+            <p class="text-yellow-400"><strong>Rating:</strong> ${m.vote_average}</p>
           </div>
         `;
       });
     }
 
-    document.getElementById("search").oninput = function() {
-      const val = this.value.toLowerCase();
-      const filtered = allMovies.filter(m => m.original_title.toLowerCase().includes(val));
-      showMovies(filtered);
+   
+    search.oninput = () => {
+      let text = search.value.toLowerCase();
+      let result = [];
+      
+      for(let movie of allMovies) {
+        if(movie.original_title.toLowerCase().includes(text)) {
+          result.push(movie);
+        }
+      }
+      
+      showMovies(result);
     }
 
     loadMovies();
-  </script>
+</script>
 </body>
 </html>
